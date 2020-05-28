@@ -1,0 +1,26 @@
+version: '3.6'
+services:
+  flowable-all-in-one-app:
+    image: flowable/all-in-one
+    depends_on:
+      - flowable-db
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://flowable-db:3306/flowable?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+    ports:
+      - "8080:8080"
+    entrypoint: ["/wait-for-something.sh", "flowable-db", "3306","MySql", "/opt/tomcat/bin/catalina.sh", "run"]
+  flowable-db:
+    image: mysql:5.7.25
+    container_name: flowable-mysql
+    environment:
+        MYSQL_DATABASE: flowable
+        MYSQL_USER: root
+        MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - D:\learn\flowable-learn\data:/var/lib/mysql
